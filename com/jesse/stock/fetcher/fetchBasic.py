@@ -3,8 +3,6 @@ import json
 import time
 
 
-
-
 class Fetcher:
 
     def __init__(self):
@@ -17,7 +15,6 @@ class Fetcher:
             for stock in stocks:
                 print(stock)
                 self.__fetch_good_stocks(stock)
-
 
     def fetchStockName(self):
         numberOfStock = self.__getCurrentStockNumber()
@@ -46,7 +43,8 @@ class Fetcher:
         if offset < 0:
             return []
 
-        url = 'http://money.finance.sina.com.cn/d/api/openapi_proxy.php/?__s=[[%22hq%22,%22hs_a%22,%22%22,' + str(offset) + ',' + str(offset + 1 )+ ',80]]&callback=analysisEachPage '
+        url = 'http://money.finance.sina.com.cn/d/api/openapi_proxy.php/?__s=[[%22hq%22,%22hs_a%22,%22%22,' + str(
+            offset) + ',' + str(offset + 1) + ',80]]&callback=analysisEachPage '
         responstStr = requests.get(url).text.split("analysisEachPage")[1]
         responseStr = responstStr[:-2]
         responseStr = responseStr[2:]
@@ -55,18 +53,22 @@ class Fetcher:
         return responseJson[0]["items"]
 
     def __fetch_good_stocks(self, stock):
-        url = "http://emweb.securities.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?ctype=4&type=0&code="+stock
+        url = "http://emweb.securities.eastmoney.com/NewFinanceAnalysis/MainTargetAjax?ctype=4&type=0&code=" + stock
         responseText = requests.get(url).text
-        responseJson = json.loads(responseText)
-        if len(responseJson) > 5:
-            print(responseJson[0])
+        try:
+            responseJson = json.loads(responseText)
+        except:
+            return
+        if len(responseJson) <= 5:
+            return
+        if responseJson[0]['mgjyxjl'] != "--" and responseJson[4]['mgjyxjl']!="--":
             latestCash = float(responseJson[0]['mgjyxjl'])
             secondCash = float(responseJson[4]['mgjyxjl'])
             latestLiabilities = float(responseJson[0]['zcfzl'])
             secondLiabilities = float(responseJson[1]['zcfzl'])
-            if latestCash>0 and latestLiabilities < secondLiabilities:
+            if latestCash > 0 and latestLiabilities < secondLiabilities:
                 cut = latestCash - secondCash
-                if cut/abs(secondCash) > 0.6:
+                if cut / abs(secondCash) > 0.6:
                     self.__store_good_stock(stock)
 
     def __store_good_stock(self, stock):
