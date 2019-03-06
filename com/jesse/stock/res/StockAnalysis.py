@@ -4,6 +4,7 @@ import json
 import datetime
 import requests
 import logging
+import re
 
 class StockAnalysis:
     def __init__(self, executor: CommonExecutor):
@@ -22,24 +23,30 @@ class StockAnalysis:
             except:
                 print("get data error")
     def fetchBasicData(self):
-        stamp = datetime.datetime.utcnow()
-        timestamp = (stamp - datetime.datetime(1970, 1, 1)).total_seconds()*1000
-        print(timestamp)
-        for stock in self.stocks:
-            url = "https://gupiao.baidu.com/api/stocks/stockdaybar?from=pc&os_ver=1&cuid=xxx&vv=100&format=json" \
-                  "&stock_code="+str(stock.stock_name)+"&step=3&start=&count=160&fq_type=front&timestamp="+str(round(timestamp))
-            print(url)
-            response = requests.get(url).text
-            print(response)
-            try:
-                jsonData = json.loads(response)
-                print([x["date"] for x in jsonData["mashData"]])
-                print([x["date"] for x in sorted(jsonData["mashData"], key=lambda data: data["date"], reverse=True)])
-                stock.setData(sorted(jsonData["mashData"], key=lambda data: data["date"], reverse=True))
-                stock.fibonacci()
-                print(stock.data[0]["price13"])
-            except Exception as e:
-                logging.exception(e)
+        url = 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
+        response = requests.get(url).text
+        response = '181009 22.05 21.82 22.12 21.26 628633'
+        pattern = re.compile(r'[0-9]{0,6}\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s\d*')
+        print(pattern.findall(response))
+
+        # stamp = datetime.datetime.utcnow()
+        # timestamp = (stamp - datetime.datetime(1970, 1, 1)).total_seconds()*1000
+        # print(timestamp)
+        # for stock in self.stocks:
+        #     url = "https://gupiao.baidu.com/api/stocks/stockdaybar?from=pc&os_ver=1&cuid=xxx&vv=100&format=json" \
+        #           "&stock_code="+str(stock.stock_name)+"&step=3&start=&count=160&fq_type=front&timestamp="+str(round(timestamp))
+        #     print(url)
+        #     response = requests.get(url).text
+        #     print(response)
+        #     try:
+        #         jsonData = json.loads(response)
+        #         print([x["date"] for x in jsonData["mashData"]])
+        #         print([x["date"] for x in sorted(jsonData["mashData"], key=lambda data: data["date"], reverse=True)])
+        #         stock.setData(sorted(jsonData["mashData"], key=lambda data: data["date"], reverse=True))
+        #         stock.fibonacci()
+        #         print(stock.data[0]["price13"])
+        #     except Exception as e:
+        #         logging.exception(e)
 
 
 def main():
