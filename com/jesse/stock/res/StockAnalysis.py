@@ -4,13 +4,15 @@ import json
 import datetime
 import requests
 import logging
+import time
 import re
+
 
 class StockAnalysis:
     def __init__(self, executor: CommonExecutor):
         self.executor = executor
         self.GOOD_STOCKS = "./basicInfo/good_stocks.json"
-        self.stocks = [Stock("sz300272")]
+        self.stocks = []
 
     def fetchLocalData(self):
         self.stocks = []
@@ -22,13 +24,32 @@ class StockAnalysis:
                     pass
             except:
                 print("get data error")
-    def fetchBasicData(self):
-        url = 'http://data.gtimg.cn/flashdata/hushen/latest/daily/sz000002.js?maxage=43201&visitDstTime=1'
-        response = requests.get(url).text
-        response = '181009 22.05 21.82 22.12 21.26 628633'
-        pattern = re.compile(r'[0-9]{0,6}\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s(\d{0,2}\.(\d{0,2}))\s\d*')
-        print(pattern.findall(response))
 
+    def fetchBasicData(self):
+        # url =
+        # response = requests.get(url).text
+        # response = '181009 22.05 21.82 22.12 21.26 628633'
+        # pattern = re.compile(r'[0-9]{0,6}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d*')
+        # pattern.findall(response)
+        pattern = re.compile(r'[0-9]{0,6}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d{0,2}\.\d{0,2}\s\d*')
+        for index, stock in enumerate(self.stocks):
+            if index % 20 == 0:
+                time.sleep(5)
+                print("processing---sleeping for 5 second")
+            print("processing---" + str(round((index + 1) / len(self.stocks) * 100, 2)) + "%")
+            try:
+                url = 'http://data.gtimg.cn/flashdata/hushen/daily/18/' + stock.stock_name + '.js?visitDstTime=1'
+                response = requests.get(url).text
+                url2 = 'http://data.gtimg.cn/flashdata/hushen/daily/19/' + stock.stock_name + '.js?visitDstTime=1'
+                response2 = requests.get(url2).text
+                response = response + "    " + response2
+                data = pattern.findall(response)
+                stock.setData(data)
+                stock.fibonacci()
+            except Exception as err:
+                print(err)
+            # print(stock.data)
+            # print(len(stock.data))
         # stamp = datetime.datetime.utcnow()
         # timestamp = (stamp - datetime.datetime(1970, 1, 1)).total_seconds()*1000
         # print(timestamp)
@@ -51,6 +72,20 @@ class StockAnalysis:
 
 def main():
     stockAnalysis = StockAnalysis(CommonExecutor())
+    stockAnalysis.fetchLocalData()
     stockAnalysis.fetchBasicData()
+    for stock in stockAnalysis.stocks:
+        print("for stock=" + stock.stock_name)
+        if stock.isThisStockGrowth():
+            if stock.goodGrowth():
+                print(stock.stock_name + "{增长中反弹确立*****}")
+            if stock.power():
+                print(stock.stock_name + "{增长中蓄势待发, 参考周线判定是否到位***}")
+            if stock.distroy():
+                print(stock.stock_name + "{增长中极限回调****}")
+        else:
+            if stock.goodGrowth():
+                print(stock.stock_name + "{弱势中反弹确立，参考周线判定是否到位****}")
+
 
 main()

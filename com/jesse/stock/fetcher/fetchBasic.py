@@ -13,7 +13,6 @@ class Fetcher:
         with open(self.BASIC_INFO_STOCKS_JSON, "r") as jsonFile:
             stocks = json.load(jsonFile)
             for stock in stocks:
-                print(stock)
                 self.__fetch_good_stocks(stock)
 
     def fetchStockName(self):
@@ -24,7 +23,6 @@ class Fetcher:
         for i in range(totalFetchNumber):
             responstTest = self.__fetchStockNameWithOffset(i)
             for stocksInfo in responstTest:
-                print(stocksInfo[0])
                 stocks.append(stocksInfo[0])
         with open(self.BASIC_INFO_STOCKS_JSON, "w") as jsonFile:
             json.dump(stocks, jsonFile, ensure_ascii=False)
