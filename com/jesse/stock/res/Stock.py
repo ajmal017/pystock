@@ -2,6 +2,7 @@ class Stock:
     def __init__(self, stock_name):
         self.stock_name = stock_name
         self.data = []
+        self.weekData = []
 
     def setData(self, data):
         # 190307 9.09 9.00 9.10 8.86 135903
@@ -16,6 +17,34 @@ class Stock:
         # [8] price 55
         # [9] price 144
         self.data = data
+
+    def fibonacciWeekData(self):
+        for index, value in enumerate(self.weekData):
+            if index < len(self.weekData):
+                if index > 13:
+                    price13 = 0
+                    for i in self.weekData[index - 12:index + 1]:
+                        price13 = price13 + float(i[2])
+                    price13 = price13 / 13
+                    self.weekData[index].append(str(price13))
+                if index > 34:
+                    price34 = 0
+                    for i in self.weekData[index - 33:index + 1]:
+                        price34 = price34 + float(i[2])
+                    price34 = price34 / 34
+                    self.weekData[index].append(str(price34))
+                if index > 55:
+                    price55 = 0
+                    for i in self.weekData[index - 54:index + 1]:
+                        price55 = price55 + float(i[2])
+                    price55 = price55 / 55
+                    self.weekData[index].append(str(price55))
+                if index > 144:
+                    price144 = 0
+                    for i in self.weekData[index - 143:index + 1]:
+                        price144 = price144 + float(i[2])
+                    price144 = price144 / 144
+                    self.weekData[index].append(str(price144))
 
     def fibonacci(self):
         for index, value in enumerate(self.data):
