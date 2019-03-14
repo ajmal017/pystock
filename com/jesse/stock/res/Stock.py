@@ -95,13 +95,28 @@ class Stock:
         try:
             latest13 = float(self.data[len(self.data) - 1].split(" ")[6])
             second13 = float(self.data[len(self.data) - 2].split(" ")[6])
-            if latest13 > second13:
+            if latest13 >= second13:
                 latest34 = float(self.data[len(self.data) - 1].split(" ")[7])
                 latest55 = float(self.data[len(self.data) - 1].split(" ")[8])
                 if latest34 < latest13 < latest55:
                     return True
                 else:
                     return False
+            else:
+                return False
+        except Exception as err:
+            print(err)
+            return False
+
+    def weekGoodGrowth(self):
+        try:
+            latest13 = float(self.weekData[len(self.weekData) - 1][-4])
+            print(self.stock_name)
+            print(latest13)
+            latest34 = float(self.weekData[len(self.weekData) - 1][-3])
+            latest55 = float(self.weekData[len(self.weekData) - 1][-2])
+            if latest34 < latest13 < latest55:
+                return True
             else:
                 return False
         except Exception as err:
@@ -127,6 +142,17 @@ class Stock:
         except Exception as err:
             print(err)
             return False
+
+    def weekPower(self):
+        try:
+            latest13 = float(self.weekData[len(self.weekData) - 1][-4])
+            price = float(self.weekData[len(self.weekData) - 1][2])
+            if abs(price - latest13) / price < 0.02:
+                return True
+            else:
+                return False
+        except Exception as err:
+            print(err)
 
     #破势接入调整
     def distroy(self):

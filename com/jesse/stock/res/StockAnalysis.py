@@ -15,7 +15,7 @@ class StockAnalysis:
     def __init__(self, executor):
         self.executor = executor
         self.GOOD_STOCKS = "./basicInfo/good_stocks.json"
-        self.stocks = [Stock("sz300280")]
+        self.stocks = []
 
     def fetchLocalData(self):
         self.stocks = []
@@ -65,8 +65,6 @@ class StockAnalysis:
                 jsonData = json.loads(data[0])
                 stock.weekData = jsonData["data"][stock.stock_name]["qfqweek"]
                 stock.fibonacciWeekData()
-                print(stock.weekData)
-                #print(stock.weekData)
             except Exception as err:
                 print(traceback.format_exc())
 
@@ -78,8 +76,13 @@ class StockAnalysis:
 
 def main():
     stockAnalysis = StockAnalysis(CommonExecutor())
-    # stockAnalysis.fetchLocalData()
+    stockAnalysis.fetchLocalData()
     stockAnalysis.fetchWeekInfo()
+    for stock in stockAnalysis.stocks:
+        if stock.weekGoodGrowth():
+            print(stock.stock_name + "{增长中反弹确立*****}")
+        if stock.weekPower():
+            print(stock.stock_name + "{增长中蓄势待发, 参考月线判定是否到位***}")
     # for stock in stockAnalysis.stocks:
     #     print("for stock=" + stock.stock_name)
     #     if stock.isThisStockGrowth():
