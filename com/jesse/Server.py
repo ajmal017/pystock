@@ -52,7 +52,7 @@ class DayGood(tornado.web.RequestHandler, ABC):
             if stock.goodGrowth():
                 response.append(stock)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.write(json.dumps(["001"]))
+        self.write(response)
         self.finish()
 
 
