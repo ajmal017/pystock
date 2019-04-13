@@ -22,15 +22,27 @@ from tornado import gen
 fetcher = Fetcher()
 stockAnalysis = StockAnalysis("default")
 
+class FetchDayData(tornado.web.RequestHandler, ABC):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        if len(stockAnalysis.stocks) == 0:
+            stockAnalysis.fetchLocalData()
+        stockAnalysis.fetchBasicData()
+        self.write("processing")
+
+class FetchWeekData(tornado.web.RequestHandler, ABC):
+    @gen.coroutine
+    def get(self, *args, **kwargs):
+        if len(stockAnalysis.stocks) == 0:
+            stockAnalysis.fetchLocalData()
+        stockAnalysis.fetchWeekInfo()
+        self.write("processing")
+
 class FetchBasicStock(tornado.web.RequestHandler, ABC):
     @gen.coroutine
     def get(self, *args, **kwargs):
         response = fetcher.fetchGoodStocks()
-        if len(stockAnalysis.stocks) == 0:
-            stockAnalysis.fetchLocalData()
-        stockAnalysis.fetchBasicData()
-        stockAnalysis.fetchWeekInfo()
-        self.write(response)
+        self.write("processing")
 
 class DayGood(tornado.web.RequestHandler, ABC):
     @gen.coroutine
@@ -55,6 +67,8 @@ def make_app():
         (r"/", MainHandler),
         (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': static_path_dir}),
         (r'/fetchBasicStock', FetchBasicStock),
+        (r'/FetchDayData', FetchDayData),
+        (r'/FetchWeekData', FetchWeekData),
         (r'/dayGood', DayGood)
     ], static_path=os.path.join(os.path.dirname(__file__), "static"))
 
