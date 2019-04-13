@@ -1,5 +1,6 @@
 import json
 import os
+os.chdir(os.path.join(os.path.realpath(__file__), ".."))
 from abc import ABC
 
 
@@ -11,7 +12,7 @@ from tornado import gen
 from com.jesse.stock.res.StockAnalysis import StockAnalysis
 
 fetcher = Fetcher()
-stockAnalysis = StockAnalysis()
+stockAnalysis = StockAnalysis("default")
 
 class FetchBasicStock(tornado.web.RequestHandler, ABC):
     @gen.coroutine

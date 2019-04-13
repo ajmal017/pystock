@@ -97,4 +97,4 @@ def main():
     #             print(stock.stock_name + "{弱势中反弹确立，参考周线判定是否到位****}")
 
 
-main()
+# main()
