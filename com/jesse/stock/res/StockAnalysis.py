@@ -17,7 +17,7 @@ import re
 class StockAnalysis:
     def __init__(self, executor):
         self.executor = executor
-        self.GOOD_STOCKS = "./basicInfo/good_stocks.json"
+        self.GOOD_STOCKS = os.path.join( os.path.realpath(__file__), "../basicInfo/good_stocks.json")
         self.stocks = []
 
     def fetchLocalData(self):
