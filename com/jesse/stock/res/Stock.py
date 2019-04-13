@@ -111,8 +111,6 @@ class Stock:
     def weekGoodGrowth(self):
         try:
             latest13 = float(self.weekData[len(self.weekData) - 1][-4])
-            print(self.stock_name)
-            print(latest13)
             latest34 = float(self.weekData[len(self.weekData) - 1][-3])
             latest55 = float(self.weekData[len(self.weekData) - 1][-2])
             if latest34 < latest13 < latest55:

@@ -12,7 +12,8 @@ class Fetcher:
     def fetchGoodStocks(self):
         with open(self.BASIC_INFO_STOCKS_JSON, "r") as jsonFile:
             stocks = json.load(jsonFile)
-            for stock in stocks:
+            for index, stock in enumerate(stocks):
+                print("processing---" + str(round((index + 1) / len(stocks) * 100, 2)) + "%")
                 self.__fetch_good_stocks(stock)
 
     def fetchStockName(self):
@@ -64,7 +65,8 @@ class Fetcher:
             secondCash = float(responseJson[4]['mgjyxjl'])
             latestLiabilities = float(responseJson[0]['zcfzl'])
             secondLiabilities = float(responseJson[1]['zcfzl'])
-            if latestCash > 0 and latestLiabilities < secondLiabilities:
+            beforeCache = float(responseJson[1]['mgjyxjl'])
+            if latestCash > 0 and latestLiabilities < secondLiabilities and latestCash > secondCash and beforeCache < latestCash:
                 cut = latestCash - secondCash
                 if cut / abs(secondCash) > 0.6:
                     self.__store_good_stock(stock)
