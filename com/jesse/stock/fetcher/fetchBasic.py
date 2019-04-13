@@ -1,3 +1,5 @@
+import os
+
 import requests
 import json
 import time
@@ -6,8 +8,8 @@ import time
 class Fetcher:
 
     def __init__(self):
-        self.BASIC_INFO_STOCKS_JSON = "../res/basicInfo/stocks.json"
-        self.GOOD_STOCKS = "../res/basicInfo/good_stocks.json"
+        self.BASIC_INFO_STOCKS_JSON = os.path.join(os.path.dirname(__file__), "../res/basicInfo/stocks.json")
+        self.GOOD_STOCKS = os.path.join(os.path.dirname(__file__), "../res/basicInfo/good_stocks.json")
 
     def fetchGoodStocks(self):
         with open(self.BASIC_INFO_STOCKS_JSON, "r") as jsonFile:
@@ -15,6 +17,7 @@ class Fetcher:
             for index, stock in enumerate(stocks):
                 print("processing---" + str(round((index + 1) / len(stocks) * 100, 2)) + "%")
                 self.__fetch_good_stocks(stock)
+        return "not blocking"
 
     def fetchStockName(self):
         numberOfStock = self.__getCurrentStockNumber()
@@ -60,7 +63,7 @@ class Fetcher:
             return
         if len(responseJson) <= 5:
             return
-        if responseJson[0]['mgjyxjl'] != "--" and responseJson[4]['mgjyxjl']!="--":
+        if responseJson[0]['mgjyxjl'] != "--" and responseJson[4]['mgjyxjl'] != "--":
             latestCash = float(responseJson[0]['mgjyxjl'])
             secondCash = float(responseJson[4]['mgjyxjl'])
             latestLiabilities = float(responseJson[0]['zcfzl'])
@@ -80,11 +83,3 @@ class Fetcher:
             jsonArray.append(stock)
             with open(self.GOOD_STOCKS, "w") as file:
                 json.dump(jsonArray, file, ensure_ascii=False)
-
-
-def main():
-    fetcher = Fetcher()
-    fetcher.fetchGoodStocks()
-
-
-main()
