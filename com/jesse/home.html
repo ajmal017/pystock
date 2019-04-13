@@ -7,12 +7,21 @@
     <script src="/static/jquery.js"></script>
 </head>
 <body>
-    <input type="button" id="fetchBasicStock" onclick="fetchGoodStocks()" value="获取好股票">
+    <input type="button" id="fetchBasicStock" value="获取好股票">
+    <table id="console"></table>
 </body>
 <script>
 $("#fetchBasicStock").click(function () {
-    $.get("fetchBasicStock", function (data) {
-        console.log(data)
+    $.get("dayGood", function (data) {
+        let tr = $("<tr></tr>");
+        data.forEach(function (stock, index) {
+
+            if (index % 10 == 0 && index > 0){
+                $("#console").append(tr)
+                tr = $("<tr></tr>")
+            }
+            tr.append("<td>stock</td>")
+        })
     })
 })
 </script>
