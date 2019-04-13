@@ -1,15 +1,23 @@
 import json
 import os
+import sys
+
 os.chdir(os.path.join(os.path.realpath(__file__), ".."))
 from abc import ABC
 
 
 import tornado.ioloop
 import tornado.web
+import importlib
 # from Tornado_study.fetcher.Rent import Rent
-from com.jesse.stock.fetcher.fetchBasic import Fetcher
+# sys.path.append(os.path.join(os.path.realpath(__file__), "./stock/fetcher"))
+# sys.path.append(os.path.abspath(os.path.join(os.path.realpath(__file__), "../../..")))
+# from com.jesse.stock.fetcher.fetchBasic import Fetcher
+Fetcher = importlib.import_module("stock.fetcher.fetchBasic").Fetcher
+StockAnalysis = importlib.import_module("stock.res.StockAnalysis").StockAnalysis
 from tornado import gen
-from com.jesse.stock.res.StockAnalysis import StockAnalysis
+# sys.path.append(os.path.join(os.path.realpath(__file__), "./stock/res"))
+
 
 fetcher = Fetcher()
 stockAnalysis = StockAnalysis("default")

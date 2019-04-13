@@ -1,7 +1,10 @@
 #! /usr/bin env python3
+import os
 
-from com.jesse.stock.res.Stock import Stock
-from com.jesse.stock.res.CommonExecutor import CommonExecutor
+import importlib
+
+Stock = importlib.import_module("stock.res.Stock").Stock
+CommonExecutor = importlib.import_module("stock.res.CommonExecutor").CommonExecutor
 import json
 import datetime
 import requests
