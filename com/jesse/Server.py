@@ -25,7 +25,7 @@ stockAnalysis = StockAnalysis("default")
 class FetchBasicStock(tornado.web.RequestHandler, ABC):
     @gen.coroutine
     def get(self, *args, **kwargs):
-        response = yield fetcher.fetchGoodStocks()
+        response = fetcher.fetchGoodStocks()
         if len(stockAnalysis.stocks) == 0:
             stockAnalysis.fetchLocalData()
         stockAnalysis.fetchBasicData()
