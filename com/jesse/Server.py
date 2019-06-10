@@ -51,8 +51,13 @@ class DayGood(tornado.web.RequestHandler, ABC):
         for stock in stockAnalysis.stocks:
             if stock.goodGrowth():
                 response.append(stock)
+        # jsonpath = os.path.join(os.path.dirname(__file__), "./stock/res/basicInfo/good_stocks.json")
+        # with open(jsonpath) as stocksFile:
+        #     stocks = json.load(stocksFile)
+        #     for stock in stocks:
+        #         response.append(stock)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
-        self.write(response)
+        self.write(json.dumps(response))
         self.finish()
 
 
