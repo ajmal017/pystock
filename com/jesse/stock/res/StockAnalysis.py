@@ -3,8 +3,11 @@ import os
 
 import importlib
 
-Stock = importlib.import_module("stock.res.Stock").Stock
-CommonExecutor = importlib.import_module("stock.res.CommonExecutor").CommonExecutor
+# Stock = importlib.import_module("stock.res.Stock").Stock
+# CommonExecutor = importlib.import_module("stock.res.CommonExecutor").CommonExecutor
+
+from com.jesse.stock.res.Stock import Stock
+from com.jesse.stock.res.CommonExecutor import CommonExecutor
 import json
 import datetime
 import requests
@@ -80,12 +83,10 @@ class StockAnalysis:
 def main():
     stockAnalysis = StockAnalysis(CommonExecutor())
     stockAnalysis.fetchLocalData()
-    stockAnalysis.fetchWeekInfo()
+    stockAnalysis.fetchBasicData()
     for stock in stockAnalysis.stocks:
-        if stock.weekGoodGrowth():
-            print(stock.stock_name + "{增长中反弹确立*****}")
-        if stock.weekPower():
-            print(stock.stock_name + "{增长中蓄势待发, 参考月线判定是否到位***}")
+        if stock.goodGrowth():
+            print(stock.stock_name)
     # for stock in stockAnalysis.stocks:
     #     print("for stock=" + stock.stock_name)
     #     if stock.isThisStockGrowth():
@@ -100,4 +101,6 @@ def main():
     #             print(stock.stock_name + "{弱势中反弹确立，参考周线判定是否到位****}")
 
 
-# main()
+main()
+
+

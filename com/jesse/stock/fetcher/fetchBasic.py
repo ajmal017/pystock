@@ -83,3 +83,6 @@ class Fetcher:
             jsonArray.append(stock)
             with open(self.GOOD_STOCKS, "w") as file:
                 json.dump(jsonArray, file, ensure_ascii=False)
+
+fetcher = Fetcher()
+fetcher.fetchGoodStocks()
